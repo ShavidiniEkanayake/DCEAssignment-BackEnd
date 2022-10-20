@@ -132,6 +132,51 @@ namespace DCE.Repositories.Impl
 
         IEnumerable<Order> ICustomerRepository.GetActiveOrders(string customerId)
         {
+            using (SqlConnection connection = new SqlConnection(SqlConnectionStringBuilder))
+            {
+
+                const string sql = "SELECT * FROM Order WHERE OrderBy = @userID  AND IsActive = 'true'";
+
+
+                using (SqlCommand sqlCommand = new SqlCommand(sql, connection))
+                {
+
+
+                    List<Order> Orders = new List<Order>();
+
+                    try
+                    {
+                        connection.Open();
+                        using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+
+                                Orders.Add(new Order
+                                {
+                                    OrderId = dataReader.GetValue(0).ToString(),
+                                   
+                                });
+                            }
+                            dataReader.Close();
+                        }
+
+                    }
+                    catch (SqlException ex)
+                    {
+                        connection.Close();
+                        throw ex;
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+
+                    return Orders;
+
+                }
+            }
+
             throw new NotImplementedException();
         }
 
@@ -246,6 +291,7 @@ namespace DCE.Repositories.Impl
                 }
             }
         }
+        
     }
 }
 

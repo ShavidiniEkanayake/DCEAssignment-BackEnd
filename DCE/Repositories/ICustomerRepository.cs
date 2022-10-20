@@ -11,6 +11,7 @@ namespace DCE.Repositories
         bool UpdateCustomer(UpdateCustomerDto customer, String userId);
         bool DeleteCustomer(String customerId);
         IEnumerable<Order> GetActiveOrders(String customerId);
+        
     }
 }
 
